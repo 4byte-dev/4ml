@@ -6,35 +6,43 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 
-# Tensor engine library
 add_library(tensor_engine STATIC
     src/tensor/cpu_engine.cpp
 )
 target_include_directories(tensor_engine PUBLIC src)
 
-# Linear regression library
 add_library(linear_regression STATIC
     src/supervised/regression/linear_regression.cpp
 )
 target_include_directories(linear_regression PUBLIC src)
 target_link_libraries(linear_regression PUBLIC tensor_engine)
 
-# --- Executables ---
-
-# Tensor benchmark
 add_executable(tensor_benchmark
     src/tensor/tensor_benchmark.cpp
 )
 target_link_libraries(tensor_benchmark tensor_engine)
 
-# Linear regression example
 add_executable(linear_regression_example
     src/supervised/regression/linear_regression_example.cpp
 )
 target_link_libraries(linear_regression_example linear_regression)
 
-# Linear regression benchmark
 add_executable(linear_regression_benchmark
     src/supervised/regression/linear_regression_benchmark.cpp
 )
 target_link_libraries(linear_regression_benchmark linear_regression)
+
+enable_testing()
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
+add_executable(tensor_test src/tensor/tensor_test.cpp)
+target_link_libraries(tensor_test tensor_engine GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(tensor_test)
