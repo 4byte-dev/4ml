@@ -38,7 +38,12 @@ Her algoritma; kaynağı, karşılaştırmalı testi ve örneği aynı dizinde o
 ### Make
 
 ```bash
-make all
+make all                          # Build all
+make ALGO=linear_regression       # Build specific algorithm only
+make ALGO="linear_regression logistic_regression"  # Build multiple
+make linear_regression            # Shorthand for above
+make linear_regression_example    # Build only example
+make linear_regression_benchmark  # Build only benchmark
 make clean
 ```
 
