@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+    branches: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ curl
+
+      - name: Install Google Test
+        run: sudo ./scripts/install_gtest.sh
+
+      - name: Discover test files
+        run: |
+          TEST_FILES=$(find src -name '*_test.cpp' -type f | sort)
+          if [ -z "$TEST_FILES" ]; then
+            echo "ERROR: No *_test.cpp files found"
+            exit 1
+          fi
+          echo "Found test files:"
+          echo "$TEST_FILES"
+          COUNT=$(echo "$TEST_FILES" | wc -l)
+          echo "$COUNT test file(s) discovered"
+
+      - name: Build and run tests
+        run: make test
