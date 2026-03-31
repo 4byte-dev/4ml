@@ -11,26 +11,21 @@ add_library(tensor_engine STATIC
 )
 target_include_directories(tensor_engine PUBLIC src)
 
-add_library(linear_regression STATIC
-    src/supervised/regression/linear_regression.cpp
+add_library(frame STATIC
+    src/frame/frame.h
 )
-target_include_directories(linear_regression PUBLIC src)
-target_link_libraries(linear_regression PUBLIC tensor_engine)
+target_include_directories(frame PUBLIC src)
+target_link_libraries(frame PUBLIC tensor_engine)
 
 add_executable(tensor_benchmark
     src/tensor/tensor_benchmark.cpp
 )
 target_link_libraries(tensor_benchmark tensor_engine)
 
-add_executable(linear_regression_example
-    src/supervised/regression/linear_regression_example.cpp
+add_executable(frame_example
+    src/frame/frame_example.cpp
 )
-target_link_libraries(linear_regression_example linear_regression)
-
-add_executable(linear_regression_benchmark
-    src/supervised/regression/linear_regression_benchmark.cpp
-)
-target_link_libraries(linear_regression_benchmark linear_regression)
+target_link_libraries(frame_example frame)
 
 enable_testing()
 
@@ -46,3 +41,8 @@ add_executable(tensor_test src/tensor/tensor_test.cpp)
 target_link_libraries(tensor_test tensor_engine GTest::gtest_main)
 include(GoogleTest)
 gtest_discover_tests(tensor_test)
+
+add_executable(frame_test src/frame/frame_test.cpp)
+target_link_libraries(frame_test frame GTest::gtest_main)
+include(GoogleTest)
+gtest_discover_tests(frame_test)
